@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agendar consulta — Clínica de Alergia e Imunologia Paulistana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4f6f5;
+  --card:#ffffff;
+  --ink:#16302a;
+  --ink-soft:#5b6f69;
+  --line:#dfe6e3;
+  --brand:#1c6b52;
+  --brand-dark:#14523f;
+  --brand-soft:#eaf3ef;
+  --warn-bg:#fdf3e4;
+  --warn-ink:#8a5a12;
+  --warn-line:#f0dcba;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101614; --card:#18211e; --ink:#eaf1ee; --ink-soft:#9db0aa;
+    --line:#26332f; --brand:#3f9a7a; --brand-dark:#2f7a5f; --brand-soft:#1c2a25;
+    --warn-bg:#2a2216; --warn-ink:#e0bd7d; --warn-line:#3d3423;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101614; --card:#18211e; --ink:#eaf1ee; --ink-soft:#9db0aa;
+  --line:#26332f; --brand:#3f9a7a; --brand-dark:#2f7a5f; --brand-soft:#1c2a25;
+  --warn-bg:#2a2216; --warn-ink:#e0bd7d; --warn-line:#3d3423;
+}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+header{text-align:center;margin-bottom:20px}
+header h1{font-size:18px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+header p{margin:0;color:var(--ink-soft);font-size:13px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:20px 18px;box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.step{display:none}
+.step.on{display:block;animation:fade .18s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+h2{font-size:16px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+.sub{margin:0 0 16px;color:var(--ink-soft);font-size:13px}
+label.fld{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--ink-soft)}
+select{
+  width:100%;padding:13px 12px;font-size:16px;font-family:inherit;
+  border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);
+  appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink-soft) 50%),linear-gradient(135deg,var(--ink-soft) 50%,transparent 50%);
+  background-position:calc(100% - 20px) calc(50% + 2px),calc(100% - 15px) calc(50% + 2px);
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+}
+select:focus{outline:2px solid var(--brand);outline-offset:1px}
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+button{
+  font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;
+  border-radius:10px;padding:14px 16px;width:100%;text-align:left;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  transition:border-color .12s,background .12s;
+}
+button:hover{border-color:var(--brand);background:var(--brand-soft)}
+button.primary{
+  background:var(--brand);color:#fff;border-color:var(--brand);text-align:center;font-weight:600;margin-top:18px;
+}
+button.primary:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+button.primary:disabled{opacity:.45;cursor:not-allowed;background:var(--brand)}
+button .hint{display:block;font-size:12px;color:var(--ink-soft);margin-top:2px;font-weight:400}
+button:hover .hint{color:var(--ink-soft)}
+.back{
+  background:none;border:none;color:var(--ink-soft);font-size:13px;padding:10px 0 0;width:auto;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.back:hover{background:none;color:var(--ink)}
+.note{
+  background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);
+  border-radius:10px;padding:13px 14px;font-size:13px;margin-top:14px;
+}
+.note ul{margin:8px 0 0;padding-left:20px}
+.note li{margin:2px 0}
+.tel+.back{margin-top:4px}
+.tel{
+  display:block;margin-top:16px;text-align:center;background:var(--brand);color:#fff;
+  padding:14px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;
+}
+.tel:hover{background:var(--brand-dark)}
+.dots{display:flex;gap:5px;justify-content:center;margin-bottom:18px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.dot.on{background:var(--brand)}
+footer{text-align:center;margin-top:20px;font-size:12px;color:var(--ink-soft)}
+footer a{color:var(--ink-soft)}
+.load{text-align:center;padding:28px 0;color:var(--ink-soft);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Clínica de Alergia e Imunologia Paulistana</h1>
+    <p>Agendamento de consulta</p>
+  </header>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="card">
+
+    <!-- 1. convênio -->
+    <section class="step on" id="s1">
+      <h2>Qual é o seu convênio?</h2>
+      <p class="sub">Selecione na lista abaixo.</p>
+      <label class="fld" for="conv">Convênio</label>
+      <select id="conv">
+        <option value="">Selecione…</option>
+      </select>
+      <button class="primary" id="b1" disabled>Continuar</button>
+    </section>
+
+    <!-- 2. aviso de planos -->
+    <section class="step" id="s2">
+      <h2 id="s2t">Atenção ao seu plano</h2>
+      <p class="sub">Confira na sua carteirinha antes de continuar.</p>
+      <div class="note" id="s2msg"></div>
+      <button class="primary" id="b2">Continuar</button>
+      <a class="tel" href="tel:+551122942442">Estou em dúvida, quero ligar</a>
+      <button class="back" data-back="1">Voltar</button>
+    </section>
+
+    <!-- 3. já se consultou -->
+    <section class="step" id="s3">
+      <h2>Você já se consultou na clínica?</h2>
+      <p class="sub">Assim conseguimos manter você com o mesmo médico, se preferir.</p>
+      <div class="opts">
+        <button data-ja="nao">É minha primeira vez</button>
+        <button data-ja="sim">Já me consultei aqui</button>
+      </div>
+      <button class="back" data-back="prev">Voltar</button>
+    </section>
+
+    <!-- 4. mesmo médico -->
+    <section class="step" id="s4">
+      <h2>Quer manter o mesmo médico?</h2>
+      <p class="sub">Você também pode agendar com o primeiro horário disponível.</p>
+      <div class="opts">
+        <button data-mesmo="sim">Sim, quero o mesmo médico</button>
+        <button data-mesmo="nao">Tanto faz<span class="hint">Mostra os horários de todos os médicos disponíveis</span></button>
+      </div>
+      <button class="back" data-back="3">Voltar</button>
+    </section>
+
+    <!-- 5. escolher médico -->
+    <section class="step" id="s5">
+      <h2>Com qual médico você se consultou?</h2>
+      <p class="sub">Mostramos apenas os médicos que atendem o seu convênio.</p>
+      <div class="opts" id="meds"></div>
+      <div class="note">Se não houver horário disponível com o médico escolhido, volte e escolha “tanto faz”, ou ligue para a clínica.</div>
+      <button class="back" data-back="4">Voltar</button>
+    </section>
+
+    <!-- 7. redirect -->
+    <section class="step" id="s7">
+      <div class="load">Abrindo a agenda…</div>
+    </section>
+
+  </div>
+
+  <footer>
+    Para remarcar ou cancelar, ligue <a href="tel:+551122942442">(11) 2294-2442</a>.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var BOOK = "https://api.leadconnectorhq.com/widget/booking/";
+
+  // calendários round robin, por grupo de regra
+  var RR = {
+    A:  "Q7HzBTOJWXBsMisyTtxG", // sócios: Ligia + Mario
+    AP: "UNIpeKGLdteJg0y9SQaF", // Prevent: só Mario
+    B:  "xxD9lOHDNsU21WpMiKxQ", // todos menos sócios
+    C:  "oy03okdbjljhFz7vlz2n", // todos menos Dra. Ligia
+    D:  "SwqtUx6MbjlsHHdufeyX"  // todos
+  };
+
+  // calendários individuais
+  var MED = {
+    mario:   {nome:"Dr. Mario",   cal:"IBH3B5ePCH1etbF5zw0B"},
+    ligia:   {nome:"Dra. Ligia",  cal:"7wWuQDgoQMbeIJSbndr9"},
+    rafael:  {nome:"Dr. Rafael",  cal:"an3CLuhIxKuSC4YCk55c"},
+    raquel:  {nome:"Dra. Raquel", cal:"rc2FURT4sWB8dlExyk3M"},
+    valeria: {nome:"Dra. Valeria",cal:"FF9aZWQjMKMO5yzJwxtS"},
+    giovane: {nome:"Dr. Giovane", cal:"sbTJgxTmcoUA2TT15899"},
+    rodrigo: {nome:"Dr. Rodrigo", cal:"0DQazM20KDI4oW657ShU"}
+  };
+
+  var DEMAIS = ["rafael","raquel","valeria","giovane","rodrigo"];
+  var EQUIPE = {
+    A:  ["ligia","mario"],
+    AP: ["mario"],
+    B:  DEMAIS,
+    C:  ["mario"].concat(DEMAIS),
+    D:  ["ligia","mario"].concat(DEMAIS)
+  };
+
+  // convênios: rótulo exatamente como no formulário; grupo; planos bloqueados
+  var CONV = [
+    {n:"Particular",               g:"D"},
+    {n:"Allianz",                  g:"C"},
+    {n:"Amil",                     g:"C", bloq:["Antiga Golden Cross"]},
+    {n:"biovida",                  g:"B"},
+    {n:"Bluemed",                  g:"B"},
+    {n:"Bradesco",                 g:"A", bloq:["Preferencial","Especial","Efetivo","Saúde 1 + RCS Ideal","Personal 12","Pleno 236","Viva","Pleno"]},
+    {n:"Careplus",                 g:"A"},
+    {n:"cassi",                    g:"A"},
+    {n:"CBPM - Cruz Azul",         g:"B"},
+    {n:"economus",                 g:"A"},
+    {n:"Gama Saude",               g:"D", bloq:["Blue"]},
+    {n:"GEAP",                     g:"A"},
+    {n:"GOCARE",                   g:"B"},
+    {n:"Itaú Saúde",               g:"A"},
+    {n:"MEDISERVICE",              g:"A"},
+    {n:"medsenior",                g:"B"},
+    {n:"omint",                    g:"A"},
+    {n:"Porto Seguro",             g:"A", bloq:["Portomed","Portomed Municípios","Portomed Bairros"]},
+    {n:"PREVENT SÊNIOR",           g:"AP"},
+    {n:"Sagrada Familia",          g:"B"},
+    {n:"sao cristovao",            g:"C", rot:"São Cristóvão"},
+    {n:"SEPACO AUTOGESTÃO",        g:"B"},
+    {n:"SEPACO SAÚDE",             g:"B"},
+    {n:"Sistemas Planos de Saúde", g:"B", rot:"Sistemas / Metrópole"},
+    {n:"SULAMERICA",               g:"A", bloq:["Fit","Extra 582","Especial 553","Extra 545","Exato 546"]},
+    {n:"TOTAL MEDCARE",            g:"B"},
+    {n:"UNICA SAÚDE",              g:"B"},
+    {n:"Unihosp",                  g:"B"},
+    {n:"UNIMED SEGUROS",           g:"A"},
+    {n:"USISAÚDE",                 g:"B"},
+    {n:"Vivest - Fundação CESP",   g:"A", bloq:["Essencial 100"]}
+  ];
+
+  var st = {conv:null, ja:null};
+
+  var $  = function(id){return document.getElementById(id);};
+  var qa = function(sel){return Array.prototype.slice.call(document.querySelectorAll(sel));};
+
+  function show(id, dot){
+    qa(".step").forEach(function(s){s.classList.remove("on");});
+    $(id).classList.add("on");
+    var d = $("dots").children;
+    for(var i=0;i<d.length;i++){ d[i].classList.toggle("on", i < dot); }
+    window.scrollTo(0,0);
+  }
+
+  // dots
+  (function(){
+    var h = "";
+    for(var i=0;i<4;i++){ h += '<span class="dot"></span>'; }
+    $("dots").innerHTML = h;
+  })();
+
+  // popula convênios (ordem alfabética, Particular primeiro)
+  (function(){
+    var sel = $("conv");
+    CONV.forEach(function(c,i){
+      var o = document.createElement("option");
+      o.value = String(i);
+      o.textContent = c.rot || c.n;
+      sel.appendChild(o);
+    });
+  })();
+
+  $("conv").addEventListener("change", function(){
+    $("b1").disabled = this.value === "";
+  });
+
+  $("b1").addEventListener("click", function(){
+    st.conv = CONV[parseInt($("conv").value,10)];
+    if(st.conv.bloq && st.conv.bloq.length){
+      var nome = st.conv.rot || st.conv.n;
+      var li = st.conv.bloq.map(function(p){ return "<li>"+p+"</li>"; }).join("");
+      $("s2msg").innerHTML = "N\u00e3o atendemos os seguintes planos do " + nome +
+        ":<ul style=\"margin:8px 0 0;padding-left:20px\">" + li + "</ul>";
+      show("s2",2);
+    } else {
+      show("s3",2);
+    }
+  });
+
+  $("b2").addEventListener("click", function(){ show("s3",3); });
+
+  qa("[data-ja]").forEach(function(b){
+    b.addEventListener("click", function(){
+      st.ja = b.getAttribute("data-ja");
+      if(st.ja === "nao"){ go(RR[st.conv.g]); }
+      else { show("s4",3); }
+    });
+  });
+
+  qa("[data-mesmo]").forEach(function(b){
+    b.addEventListener("click", function(){
+      if(b.getAttribute("data-mesmo") === "nao"){ go(RR[st.conv.g]); }
+      else { medicos(); show("s5",4); }
+    });
+  });
+
+  function medicos(){
+    var box = $("meds");
+    box.innerHTML = "";
+    EQUIPE[st.conv.g].forEach(function(k){
+      var b = document.createElement("button");
+      b.textContent = MED[k].nome;
+      b.addEventListener("click", function(){ go(MED[k].cal); });
+      box.appendChild(b);
+    });
+  }
+
+  function go(cal){
+    show("s7",4);
+    window.location.href = BOOK + cal;
+  }
+
+  qa("[data-back]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var t = b.getAttribute("data-back");
+      if(t === "prev"){
+        if(st.conv && st.conv.bloq){ show("s2",2); } else { show("s1",1); }
+      } else if(t === "1"){
+        show("s1",1);
+      } else {
+        show("s"+t, parseInt(t,10));
+      }
+    });
+  });
+
+  show("s1",1);
+})();
+</script>
+</body>
+</html>
