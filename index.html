@@ -90,6 +90,8 @@ button:hover .hint{color:var(--ink-soft)}
   background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);
   border-radius:10px;padding:13px 14px;font-size:13px;margin-top:14px;
 }
+.note.info{background:var(--brand-soft);border-color:var(--line);color:var(--ink)}
+.note .preco{display:block;font-size:22px;font-weight:700;color:var(--brand);margin:2px 0 4px}
 .note ul{margin:8px 0 0;padding-left:20px}
 .note li{margin:2px 0}
 .tel+.back{margin-top:4px}
@@ -161,7 +163,7 @@ footer a{color:var(--ink-soft)}
     <!-- 2. aviso de planos -->
     <section class="step" id="s2">
       <h2 id="s2t">Atenção ao seu plano</h2>
-      <p class="sub">Confira na sua carteirinha antes de continuar.</p>
+      <p class="sub" id="s2sub">Confira na sua carteirinha antes de continuar.</p>
       <div class="note" id="s2msg"></div>
       <button class="primary" id="b2">Continuar</button>
       <a class="tel" href="tel:+551122942442">Estou em dúvida, quero ligar</a>
@@ -243,12 +245,13 @@ footer a{color:var(--ink-soft)}
     AP: ["mario"],
     B:  DEMAIS,
     C:  ["mario"].concat(DEMAIS),
-    D:  ["ligia","mario"].concat(DEMAIS)
+    D:  ["ligia","mario"].concat(DEMAIS),
+    P:  ["ligia"]
   };
 
   // convênios: rótulo exatamente como no formulário; grupo; planos bloqueados
   var CONV = [
-    {n:"Particular",               g:"D"},
+    {n:"Particular",               g:"P"},  // só Dra. Ligia
     {n:"Allianz",                  g:"C"},
     {n:"Amil",                     g:"C", bloq:["Antiga Golden Cross"]},
     {n:"biovida",                  g:"B"},
@@ -280,6 +283,13 @@ footer a{color:var(--ink-soft)}
     {n:"USISAÚDE",                 g:"B"},
     {n:"Vivest - Fundação CESP",   g:"A", bloq:["Essencial 100"]}
   ];
+
+  // consulta particular
+  var PARTICULAR = {
+    medico: "ligia",
+    valor:  "R$ 500,00",
+    retorno:"com direito a 1 retorno em até 30 dias, agendado pelo telefone"
+  };
 
   var st = {conv:null, ja:null};
 
@@ -318,7 +328,17 @@ footer a{color:var(--ink-soft)}
 
   $("b1").addEventListener("click", function(){
     st.conv = CONV[parseInt($("conv").value,10)];
-    if(st.conv.bloq && st.conv.bloq.length){
+    if(st.conv.g === "P"){
+      $("s2t").textContent = "Consulta particular";
+      $("s2sub").textContent = "Atendimento com a " + MED[PARTICULAR.medico].nome + ".";
+      $("s2msg").className = "note info";
+      $("s2msg").innerHTML = "Valor da consulta<span class=\"preco\">" + PARTICULAR.valor +
+        "</span>" + PARTICULAR.retorno.charAt(0).toUpperCase() + PARTICULAR.retorno.slice(1) + ".";
+      show("s2",2);
+    } else if(st.conv.bloq && st.conv.bloq.length){
+      $("s2t").textContent = "Atenção ao seu plano";
+      $("s2sub").textContent = "Confira na sua carteirinha antes de continuar.";
+      $("s2msg").className = "note";
       var nome = st.conv.rot || st.conv.n;
       var li = st.conv.bloq.map(function(p){ return "<li>"+p+"</li>"; }).join("");
       $("s2msg").innerHTML = "N\u00e3o atendemos os seguintes planos do " + nome +
@@ -329,7 +349,10 @@ footer a{color:var(--ink-soft)}
     }
   });
 
-  $("b2").addEventListener("click", function(){ show("s3",3); });
+  $("b2").addEventListener("click", function(){
+    if(st.conv.g === "P"){ go(MED[PARTICULAR.medico].cal); }
+    else { show("s3",3); }
+  });
 
   qa("[data-ja]").forEach(function(b){
     b.addEventListener("click", function(){
