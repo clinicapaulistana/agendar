@@ -100,6 +100,8 @@ button:hover .hint{color:var(--ink-soft)}
   padding:14px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;
 }
 .tel:hover{background:var(--brand-dark)}
+.tel.alt{background:var(--card);color:var(--brand);border:1px solid var(--brand);margin-top:10px}
+.tel.alt:hover{background:var(--brand-soft)}
 .dots{display:flex;gap:5px;justify-content:center;margin-bottom:18px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
 .dot.on{background:var(--brand)}
@@ -129,8 +131,29 @@ footer a{color:var(--ink-soft)}
 
   <div class="card">
 
+    <!-- 0. o que agendar -->
+    <section class="step on" id="s0">
+      <h2>O que você quer agendar?</h2>
+      <p class="sub">Escolha uma opção para continuar.</p>
+      <div class="opts">
+        <button data-tipo="consulta">Consulta com alergista</button>
+        <button data-tipo="Teste alérgico">Teste alérgico</button>
+        <button data-tipo="Retorno">Retorno</button>
+        <button data-tipo="Imunoterapia (vacina)">Imunoterapia (vacina)</button>
+      </div>
+    </section>
+
+    <!-- 0b. só pela recepção -->
+    <section class="step" id="s0r">
+      <h2 id="s0rt"></h2>
+      <p class="sub">Este agendamento é feito pela recepção. Fale com a gente por telefone ou WhatsApp.</p>
+      <a class="tel" href="tel:+551122942442">Ligar (11) 2294-2442</a>
+      <a class="tel alt" href="https://wa.me/5511942833595" target="_blank" rel="noopener">WhatsApp (11) 94283-3595</a>
+      <button class="back" data-back="0">Voltar</button>
+    </section>
+
     <!-- 1. convênio -->
-    <section class="step on" id="s1">
+    <section class="step" id="s1">
       <h2>Qual é o seu convênio?</h2>
       <p class="sub">Selecione na lista abaixo.</p>
       <label class="fld" for="conv">Convênio</label>
@@ -138,6 +161,7 @@ footer a{color:var(--ink-soft)}
         <option value="">Selecione…</option>
       </select>
       <button class="primary" id="b1" disabled>Continuar</button>
+      <button class="back" data-back="0">Voltar</button>
       <div class="avisos">
         <h3>Este agendamento é para consultas nos próximos 30 dias.</h3>
         <div class="blk">
@@ -146,7 +170,6 @@ footer a{color:var(--ink-soft)}
             <li>Sua última consulta foi há menos de 30 dias</li>
             <li>Quer marcar para daqui a mais de 30 dias</li>
             <li>Precisa remarcar ou cancelar</li>
-            <li>Retorno, imunoterapia (vacina) ou testes alérgicos</li>
           </ul>
         </div>
         <div class="blk">
@@ -307,7 +330,7 @@ footer a{color:var(--ink-soft)}
   // dots
   (function(){
     var h = "";
-    for(var i=0;i<4;i++){ h += '<span class="dot"></span>'; }
+    for(var i=0;i<5;i++){ h += '<span class="dot"></span>'; }
     $("dots").innerHTML = h;
   })();
 
@@ -322,6 +345,14 @@ footer a{color:var(--ink-soft)}
     });
   })();
 
+  qa("[data-tipo]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var t = b.getAttribute("data-tipo");
+      if(t === "consulta"){ show("s1",2); }
+      else { $("s0rt").textContent = t; show("s0r",1); }
+    });
+  });
+
   $("conv").addEventListener("change", function(){
     $("b1").disabled = this.value === "";
   });
@@ -334,7 +365,7 @@ footer a{color:var(--ink-soft)}
       $("s2msg").className = "note info";
       $("s2msg").innerHTML = "Valor da consulta<span class=\"preco\">" + PARTICULAR.valor +
         "</span>" + PARTICULAR.retorno.charAt(0).toUpperCase() + PARTICULAR.retorno.slice(1) + ".";
-      show("s2",2);
+      show("s2",3);
     } else if(st.conv.bloq && st.conv.bloq.length){
       $("s2t").textContent = "Atenção ao seu plano";
       $("s2sub").textContent = "Confira na sua carteirinha antes de continuar.";
@@ -343,29 +374,29 @@ footer a{color:var(--ink-soft)}
       var li = st.conv.bloq.map(function(p){ return "<li>"+p+"</li>"; }).join("");
       $("s2msg").innerHTML = "N\u00e3o atendemos os seguintes planos do " + nome +
         ":<ul style=\"margin:8px 0 0;padding-left:20px\">" + li + "</ul>";
-      show("s2",2);
+      show("s2",3);
     } else {
-      show("s3",2);
+      show("s3",3);
     }
   });
 
   $("b2").addEventListener("click", function(){
     if(st.conv.g === "P"){ go(MED[PARTICULAR.medico].cal); }
-    else { show("s3",3); }
+    else { show("s3",4); }
   });
 
   qa("[data-ja]").forEach(function(b){
     b.addEventListener("click", function(){
       st.ja = b.getAttribute("data-ja");
       if(st.ja === "nao"){ go(RR[st.conv.g]); }
-      else { show("s4",3); }
+      else { show("s4",4); }
     });
   });
 
   qa("[data-mesmo]").forEach(function(b){
     b.addEventListener("click", function(){
       if(b.getAttribute("data-mesmo") === "nao"){ go(RR[st.conv.g]); }
-      else { medicos(); show("s5",4); }
+      else { medicos(); show("s5",5); }
     });
   });
 
@@ -381,7 +412,7 @@ footer a{color:var(--ink-soft)}
   }
 
   function go(cal){
-    show("s7",4);
+    show("s7",5);
     window.location.href = BOOK + cal;
   }
 
@@ -389,16 +420,16 @@ footer a{color:var(--ink-soft)}
     b.addEventListener("click", function(){
       var t = b.getAttribute("data-back");
       if(t === "prev"){
-        if(st.conv && st.conv.bloq){ show("s2",2); } else { show("s1",1); }
+        if(st.conv && st.conv.bloq){ show("s2",3); } else { show("s1",2); }
       } else if(t === "1"){
-        show("s1",1);
+        show("s1",2);
       } else {
-        show("s"+t, parseInt(t,10));
+        show("s"+t, parseInt(t,10)+1);
       }
     });
   });
 
-  show("s1",1);
+  show("s0",1);
 })();
 </script>
 </body>
