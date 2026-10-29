@@ -188,7 +188,7 @@ footer a{color:var(--ink-soft)}
       <p class="sub" id="s2sub">Confira na sua carteirinha antes de continuar.</p>
       <div class="note" id="s2msg"></div>
       <button class="primary" id="b2">Continuar</button>
-      <a class="tel" href="tel:+551122942442">Estou em dúvida, quero ligar</a>
+      <a class="tel" id="s2tel" href="tel:+551122942442">Estou em dúvida, quero ligar</a>
       <button class="back" data-back="1">Voltar</button>
     </section>
 
@@ -277,7 +277,7 @@ footer a{color:var(--ink-soft)}
     {n:"Allianz",                  g:"C"},
     {n:"Amil",                     g:"C", bloq:["Antiga Golden Cross"]},
     {n:"biovida",                  g:"B"},
-    {n:"Bluemed",                  g:"B"},
+    {n:"Bluemed",                  g:"B", susp:true},  // suspenso até segunda ordem (29/10/2026)
     {n:"Bradesco",                 g:"A", bloq:["Preferencial","Especial","Efetivo","Saúde 1 + RCS Ideal","Personal 12","Pleno 236","Viva","Pleno"]},
     {n:"Careplus",                 g:"A"},
     {n:"cassi",                    g:"A"},
@@ -358,7 +358,17 @@ footer a{color:var(--ink-soft)}
 
   $("b1").addEventListener("click", function(){
     st.conv = CONV[parseInt($("conv").value,10)];
-    if(st.conv.g === "P"){
+    $("b2").style.display = st.conv.susp ? "none" : "";
+    $("s2tel").textContent = st.conv.susp ? "Ligar para a recepção" : "Estou em dúvida, quero ligar";
+    if(st.conv.susp){
+      var nomeS = st.conv.rot || st.conv.n;
+      $("s2t").textContent = "Atendimento pelo " + nomeS + " suspenso";
+      $("s2sub").textContent = "No momento não estamos atendendo pelo " + nomeS + ".";
+      $("s2msg").className = "note";
+      $("s2msg").innerHTML = "Não é possível agendar pelo " + nomeS + " por enquanto. " +
+        "Para saber outras opções, como consulta particular, ligue para a recepção: (11) 2294-2442.";
+      show("s2",3);
+    } else if(st.conv.g === "P"){
       $("s2t").textContent = "Consulta particular";
       $("s2sub").textContent = "Atendimento com a " + MED[PARTICULAR.medico].nome + ".";
       $("s2msg").className = "note info";
